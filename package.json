@@ -1,0 +1,23 @@
+{
+  "name": "rhythmic-unicorn",
+  "version": "1.0.0",
+  "description": "Building a music suggestion database through gamified crowdsourcing",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ferb96/Rhythmic-Unicorn.git"
+  },
+  "author": "Duy Nguyen, David Schabelski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ferb96/Rhythmic-Unicorn/issues"
+  },
+  "homepage": "https://github.com/ferb96/Rhythmic-Unicorn#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3"
+  }
+}
