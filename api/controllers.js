@@ -20,8 +20,6 @@ module.exports.getToken = function(req,res){
 					var expire = Math.floor(new Date().getTime()/1000) + data.expires_in;
 					req.app.locals.spotify.token = token;
 					req.app.locals.spotify.expire = expire;
-					console.log(token);
-					console.log(req.app.locals.spotify.token);
 					res.status(200).json({'token':'Bearer '+token});
 				} else {
 					var data = JSON.parse(body);
