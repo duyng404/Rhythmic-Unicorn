@@ -69,6 +69,7 @@
 				var artist = i.artists[0].name;
 				var album = i.album.name;
 				var sample = i.preview_url;
+				console.log(i);
 				//if (sample === null) return;
 				$('#result-spotify').append('<p>'+title+' by '+artist+' in '+album+'</p>');
 				$('#result-spotify').append('<audio controls src="'+sample+'" preload="none" /><button>Select</button>')

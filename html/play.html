@@ -3,6 +3,11 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Rhythmic Unicorn</title>
+	<link rel="stylesheet" href="/mizuki.css" type="text/css" />
+	<link rel="stylesheet" href="/vendors/fontawesome/css/font-awesome.min.css" type="text/css" />
+	<!--<link type="text/css" rel="stylesheet" href="/audioplayer/css/jplayer.blue.monday.css" rel="stylesheet" />-->
+	<link href="https://fonts.googleapis.com/css?family=Exo:700i|Open+Sans:400,600i&amp;subset=latin-ext" rel="stylesheet">
+
 	<base href="/">
 </head>
 <body>
@@ -14,8 +19,10 @@
 
 	<!--vendor scripts-->
 	<script type="text/javascript" src="/vendors/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="/vendors/jplayer.min.js"></script>
 
 	<!--app scripts-->
+	<script type="text/javascript" src="/game.js"></script>
 	<script>
 		var gameScreen;
 		$.ajax({
@@ -24,11 +31,15 @@
 			success: function(data){
 				gameScreen = data;
 				$("#start").prop("disabled",false);
+				$("#content").empty();
+				$("#content").html(gameScreen);
+				//addResult(1,"Tokyo Girl","Perfume","Tokyo Girl Single","https://i.scdn.co/image/22405cc1b7eb26e5d7bc80f847939836ba74d89a","/test.mp3");
 			}
 		});
 
 		$("#start").click(function(){
-
+			$("#content").empty();
+			$("#content").html(gameScreen);
 		});
 	</script>
 </body>

@@ -1,0 +1,476 @@
+/* ----------- RESET ---------------*/
+
+	html, body, div, span, applet, object, iframe,
+	h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+	a, abbr, acronym, address, big, cite, code,
+	del, dfn, em, img, ins, kbd, q, s, samp,
+	small, strike, strong, sub, sup, tt, var,
+	b, u, i, center,
+	dl, dt, dd, ol, ul, li,
+	fieldset, form, label, legend,
+	table, caption, tbody, tfoot, thead, tr, th, td,
+	article, aside, canvas, details, embed, 
+	figure, figcaption, footer, header, hgroup, 
+	menu, nav, output, ruby, section, summary,
+	time, mark, audio, video {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		font-size: 100%;
+		font: inherit;
+		vertical-align: baseline;
+		box-sizing: border-box;
+	}
+	/* HTML5 display-role reset for older browsers */
+	article, aside, details, figcaption, figure, 
+	footer, header, hgroup, menu, nav, section {
+		display: block;
+	}
+	body {
+		line-height: 1;
+	}
+	ol, ul {
+		list-style: none;
+	}
+	blockquote, q {
+		quotes: none;
+	}
+	blockquote:before, blockquote:after,
+	q:before, q:after {
+		content: '';
+		content: none;
+	}
+	table {
+		border-collapse: collapse;
+		border-spacing: 0;
+	}
+
+/* ----------- GLOBAL --------------- */
+
+	:root{
+		--bg-color: #222;
+		--highlight-color: #00B6CE;
+		--darkwhite: #AAAAAA;
+	}
+
+/* ----------- LAYOUT --------------- */
+
+	html {
+		height: 100%;
+		background-color: #222;
+	}
+
+	body {
+		position: relative;
+		background-color: var(--bg-color);
+		color: white;
+	}
+
+	#all {
+		margin: 0 auto;
+	}
+
+/* -------------- COOL BACKGROUND -------------- */
+
+#imagefade{
+	width:100%;
+	height: 300px;
+	background:
+		linear-gradient(
+		  rgba(0, 0, 0, 0.6),
+		  rgba(34, 34, 34, 1)
+		),
+		url("images/guitar.jpg");
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center center;
+	margin: 0 0 -270px 0;
+}
+
+/* ------------- TIMER --------------- */
+
+	#timer {
+		text-align: center;
+	}
+
+	#timer p{
+		font: "Open Sans", Arial, sans-serif;
+		font-weight: 600;
+		font-style: italic;
+		color: #999;
+	}
+
+	#timer h2 {
+		font: italic 3rem "Exo", Arial, sans-serif;
+		line-height: 3.5rem;
+		margin-bottom: 30px;
+	}
+
+/* ------------- QUESTION --------------- */
+
+	#question{
+		font-size: 2vw;
+		text-align:center;
+		width: 100%;
+		user-select: none;
+	}
+
+	#question-text {
+		font: 1.2rem "Open Sans", Arial, sans-serif;
+		font-weight: 400;
+		color: #ccc;
+	}
+
+	#spotlight {
+		display:inline-block;
+		line-height: 0;
+		margin: 20px 0 20px;
+	}
+
+	#question-play {
+		color: #666;
+		font-size: 5em;
+		display: inline-block;
+		margin: 0 0 0 20px;
+		cursor: pointer;
+	}
+
+	#question-title{
+		font: italic 3em "Exo", Arial, sans-serif;
+		line-height: 1em;
+		text-align: right;
+		color: #00B6CE;
+		cursor: pointer;
+	}
+
+	#question-artist{
+		font: italic 1.2em "Exo", Arial, sans-serif;
+		font-weight: 600;
+		text-align: right;
+		color: #00B6CE;
+		cursor: pointer;
+	}
+
+	#question-video{
+		width: 90%;
+		margin: 0 auto;
+		display: none;
+	}
+
+	.aspect-ratio{
+		position: relative;
+		height: 0;
+		padding-bottom: 60%;
+	}
+
+	.aspect-ratio iframe {
+		position: absolute;
+		left: 0; top: 0;
+		width:100%;
+		height:100%;
+	}
+
+/* ------------- SEARCH BAR ----------- */
+
+	#search-bar {
+		width: 90%;
+		margin: 40px auto 0;
+	}
+
+	#query {
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		display:inline-block;
+		width:90%;
+		background-color: rgba(30,30,30,.5);
+		line-height:3rem;
+		font-size:1.2rem;
+		font-family: "Open Sans", "Roboto", Arial, sans-serif;
+		text-align: center;
+		color: #fff;
+		border:3px solid #00b6ce;
+		outline: none;
+		vertical-align: text-top;
+	}
+
+	#query:hover{
+		border:3px solid #fff;
+	}
+
+	#search{
+		box-sizing:border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		display:inline-block;
+		width:10%;
+		background-color: #00b6ce;
+		border:3px solid #00b6ce;
+		color:#fff;
+		cursor:pointer;
+		font-size:2rem;
+		line-height:3rem;
+		vertical-align: text-top;
+	}
+
+	#search:hover{
+		color:#00b6be;
+		background-color:#fff;
+		border:3px solid #fff;
+	}
+
+/* ------------- RESULTS ------------- */
+
+	#results{
+		width: 90%;
+		margin: 10px auto;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+		grid-gap: 10px;
+	}
+
+	.song{
+		position: relative;
+		height: 300px;
+	}
+
+	.albumcover{
+		top:0;
+		position: absolute;
+		width:100%;
+		height: 250px;
+		background-repeat: no-repeat;
+		background:
+			linear-gradient(
+			  rgba(0, 0, 0, .9),
+			  rgba(34, 34, 34, .6)
+			);
+	}
+
+	.songtitle{
+		font: italic 1.2rem "Exo", Arial, sans-serif;
+		font-weight: 600;
+		color: #00b6ce;
+		margin: 20px 0 0;
+		padding: 0 20px;
+		pointer-events: none;
+		position: relative;
+		z-index: 10;
+	}
+
+	.artist, .album{
+		font: "Open Sans", Arial, sans-serif;
+		color: #ccc;
+		margin: 10px 0;
+		padding: 0 20px;
+		pointer-events: none;
+		position: relative;
+		z-index: 10;
+	}
+
+	.select-button{
+		position: absolute;
+		height: 40px;
+		width: 100%;
+		bottom: 0;
+		box-sizing:border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		background-color: #00b6ce;
+		border:2px solid #00b6ce;
+		color:#fff;
+		font-size:2rem;
+		text-transform: uppercase;
+		cursor: pointer;
+		font: italic 1.2rem "Exo", Arial, sans-serif;
+		font-weight: 600;
+		opacity:.1;
+		-webkit-transition: all 0.2s ease-in-out;
+		-moz-transition: all 0.2s ease-in-out;
+		-o-transition: all 0.2s ease-in-out;
+		transition: all 0.2s ease-in-out;
+	}
+
+/* ------------ JPLAYERS -------------- */
+
+	.player{
+		position: absolute;
+		width: 100%;
+		height: 35px;
+		bottom: 0;
+	}
+	.player button{
+		display:inline-block;
+		vertical-align: text-top;
+		box-sizing:border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		background-color: #00b6ce;
+		border:3px solid #00b6ce;
+		color:#fff;
+		font-size:1.2rem;
+		width:15%;
+		height:100%;
+	}
+	.player .progress-bar{
+		display: inline-block;
+		vertical-align: text-top;
+		width:85%;
+		height:100%;
+	}
+
+	.jp-seek-bar{
+		background: rgba(34, 34, 34, .5);
+		position: relative;
+		width: 0;
+		height: 100%;
+		cursor: pointer;
+	}
+	.jp-play-bar{
+		background: teal;
+		width: 0px;
+		height:100%;
+		cursor: pointer;
+	}
+	.player .time{
+		position: absolute;
+		left: 50%; top: 50%;
+		transform:translate(-50%, -50%);
+	}
+	.fa-pause{
+		display: none !important;
+	}
+	.jp-state-playing .fa-play{
+		display: none !important;
+	}
+	.jp-state-playing .fa-pause{
+		display: inline-block !important;
+	}
+
+	/* youtube iframe */
+	.albumcover iframe{
+		position:absolute;
+		top:0; left:0;
+		height:100%;
+		width:100%;
+		z-index: 2;
+	}
+
+/* ------------- RESPONSIVE ---------- */
+/* tablet & phone */
+@media (max-width: 900px){
+		html { font-size: 16px; }
+}
+
+/* desktop */
+@media (min-width: 900px){
+}
+
+@media (min-width: 900px) and (max-width: 1500px) {
+}
+
+/* wide desktop */
+@media (min-width: 1500px){
+}
+
+/* -------------- FONTS & FORMATTING -------------- */
+
+body{
+	font-family: "Open Sans", "Roboto", Arial, sans-serif;
+}
+
+h1,h2,h3,h4,h5,h6{
+	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
+	color: #00B6CE;
+	font-weight: 600;
+}
+
+a{
+	text-decoration: none;
+	color: #00B6CE;
+}
+
+a:visited{
+	color: #00B6CE;
+}
+
+a:hover{
+	color: #99c2ff;
+}
+
+ol{
+	list-style-type: decimal;
+	margin: 1em 0 0;
+	padding: 0 0 0 2.5em;
+}
+
+ul{
+	list-style-type: square;
+	margin: 1em 0 0;
+	padding: 0 0 0 2.5em;
+}
+
+blockquote {
+	border-left: 1em solid #555;
+	margin: 1em 10px 0;
+	padding: 0.5em 10px;
+	quotes: "\201C""\201D""\2018""\2019";
+}
+
+blockquote:before {
+	color: #666;
+	content: open-quote;
+	font-family: Times, serif;
+	font-size: 4.5em;
+	line-height: 0.1em;
+	margin-right: 0.2em;
+	vertical-align: -0.4em;
+}
+
+blockquote p {
+	display: inline;
+}
+
+pre {
+	width:95%;
+	overflow: auto;
+	font-family: monospace;
+	background-color: #404040;
+	margin: 1em auto 0;
+	padding: .5em 10px;
+}
+
+code{
+	font-family: monospace;
+	background-color: #404040;
+	padding: 0 4px;
+}
+
+strong{
+	font-weight: 600;
+}
+
+em{
+	font-style: italic;
+}
+
+/* -------------- TABLE ----------------- */
+
+table{
+	margin: 2em auto 2em;
+	text-align: left;
+	line-height: 2.5em;
+}
+
+th{
+	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
+	font-size: 1.25em;
+	font-weight: 600;
+	color: #00B6CE;
+	border-bottom: 2px solid #00B6CE;
+	padding: 0 .5em .25em;
+}
+
+td{
+	padding: 0 2em 0 .5em;
+}
