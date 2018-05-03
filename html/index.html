@@ -3,12 +3,67 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Rhythmic Unicorn</title>
-	<base href="/">
+	<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
 </head>
 <body>
 	<h1>Welcome to Rhythmic Unicorn!!!1</h1>
-	<p><a href="/play.html">PLAY GAME</a></p>
-	<p><a href="/">info</a></p>
-	<p><a href="/">leaderboard</a></p>
+	<textarea id="token" readonly='true'></textarea>
+	<button id="gettoken">Get Token</button>
+	<input id="query" type="text" placeholder="Enter search terms" />
+	<button id="search">Search Spotify</button>
+	<div id="result">Search results are displayed here</div>
+
+	<script type="text/javascript" src="/vendors/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript">
+		var id64 = 'ZWM1NDQ5ZjEwYTUzNGRmZDgwODkwY2Y5NmEzMmEzNWU6MWM0NmQ0ZjVmMzAxNDZhNzk4Nzc3YTE3MzcyZjYzZmU=';
+
+		window.onload = function() {
+			if (localStorage.getItem('expire') !== null && localStorage.getItem('expire') >= new Date().getTime()/1000){
+				$('#token').val(localStorage.getItem('token'));
+			}
+		};
+
+		$("#gettoken").click(function(){
+			$('#token').val('getting token ...');
+			$.get('/api/getSpotifyToken',function(data){
+				$('#token').val(data.token);
+			});
+		});
+
+		$('#search').click(function(){
+			//var query = encodeURIComponent($('#query').val());
+			var query = $('#query').val();
+			var token = $('#token').val();
+			$('#result').html("Waiting for response ...");
+			$.ajax({
+				url: 'https://api.spotify.com/v1/search',
+				data:{
+					q: query,
+					type: 'track',
+					market: 'US'
+				},
+				type: "GET",
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+					'Authorization': token
+				},
+				success: populateResult
+			});
+		});
+
+		function populateResult(data){
+			$('#result').html("");
+			data.tracks.items.forEach(function(i){
+				var title = i.name;
+				var artist = i.artists[0].name;
+				var album = i.album.name;
+				var sample = i.preview_url;
+				if (sample === null) return;
+				$('#result').append('<p>',title,' by ',artist,' in ',album,'</p>');
+				$('#result').append('<audio controls src="'+sample+'" preload="none" /><button>Select</button>')
+			});
+		};
+	</script>
 </body>
 </html>

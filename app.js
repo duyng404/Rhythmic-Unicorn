@@ -4,10 +4,10 @@ var path = require('path');
 var express = require('express');
 //var request = require('request');
 var bodyParser = require('body-parser');
-//var moment = require('moment');
+var routes = require('./api/index.js');
 
 // Connect to the database
-//require('./api/db.js');
+require('./api/db.js');
 
 // this is the whole app
 var app = express();
@@ -41,11 +41,19 @@ app.use('/node_modules', express.static(path.join(__dirname,'/node_modules')));
 app.use(bodyParser.urlencoded({ extended: false }));;
 app.use(bodyParser.json());
 
-var ctrl = require('./api/controllers.js');
 
-app.
-	route('/api/getSpotifyToken').
-	get(ctrl.getToken);
+//var ctrl = require('./api/controllers.js');
+
+// Ad routing 
+app.use('/api', routes);
+
+// app.
+// 	route('/api/getSpotifyToken').
+// 	get(ctrl.getToken);
+
+// app. 
+// 	route('/api/addSong').
+// 	get(ctrl.songsAddOne);
 
 // Listen for requests
 var server = app.listen(app.get('port'), function(){
