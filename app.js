@@ -1,16 +1,17 @@
+// Connect to the database
+require('./api/db.js');
+
 // all the requires
 //var jsonfile = require('jsonfile');
 var path = require('path');
 var express = require('express');
-//var request = require('request');
 var bodyParser = require('body-parser');
-var routes = require('./api/index.js');
-
-// Connect to the database
-require('./api/db.js');
+//var request = require('request');
 
 // this is the whole app
 var app = express();
+
+var routes = require('./api/index.js');
 
 // this server gonna run on this port
 app.set('port', 8080);
@@ -21,12 +22,18 @@ app.use(function(req, res, next){
 	next();
 });
 
+// Connect to Spotify
+app.locals.spotify = require('./api/spot.js')();
+
 // global variables
-app.locals.spotify = {
+app.locals.spotifyy = {
 	id64: 'ZWM1NDQ5ZjEwYTUzNGRmZDgwODkwY2Y5NmEzMmEzNWU6MWM0NmQ0ZjVmMzAxNDZhNzk4Nzc3YTE3MzcyZjYzZmU=',
 	token: 'nowaythisisgoingtowork',
 	expire: 0
 };
+
+// global variables
+//app.locals.spotify = {};
 
 // static directory
 app.use(express.static(path.join(__dirname, 'html')));

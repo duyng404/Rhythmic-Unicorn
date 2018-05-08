@@ -22,7 +22,9 @@
     "jplayer": "^2.9.2",
     "jquery": "^3.3.1",
     "mongoose": "^5.0.15",
-    "request": "^2.85.0"
+    "mongoose-query-random": "^1.0.1",
+    "request": "^2.85.0",
+    "spotify-web-api-node": "^3.1.1"
   },
   "devDependencies": {}
 }

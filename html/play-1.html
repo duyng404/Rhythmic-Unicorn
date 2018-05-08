@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Rhythmic Unicorn</title>
+	<link rel="stylesheet" href="/mizuki.css" type="text/css" />
+	<link rel="stylesheet" href="/vendors/fontawesome/css/font-awesome.min.css" type="text/css" />
+	<!--<link type="text/css" rel="stylesheet" href="/audioplayer/css/jplayer.blue.monday.css" rel="stylesheet" />-->
+	<link href="https://fonts.googleapis.com/css?family=Exo:700i|Open+Sans:400,600i&amp;subset=latin-ext" rel="stylesheet">
+
+	<base href="/">
+</head>
+
+<body>
+
+<div id="content">
+
+	<!-- HELLA COOL BACKGROUND -->
+	<div id="imagefade"></div>
+
+	<!-- COUNTDOWN TIMER -->
+	<div id="timer">
+		<p>Time Left</p>
+		<h2>5:00</h2>
+	</div>
+
+	<!-- QUESTION SONG -->
+	<div id="question">
+		<div id="question-text">How many songs can you name that is similar to ...</div>
+		<div id="spotlight">
+			<div id="question-title">Jesus of Suburbia</div><br />
+			<div id="question-artist">by Green Day</div>
+		</div>
+		<div id="question-play"><i class="fa fa-play-circle" aria-hidden="true"></i></div>
+	</div>
+	<div id="question-video">
+		<div class="aspect-ratio"><iframe type="text/html" src="https://www.youtube.com/embed/Ee_uujKuJMI" frameborder="0"></iframe></div>
+	</div>
+
+	<!-- SEARCH BAR -->
+	<div id="search-bar">
+		<input id="query" type="text" placeholder="Search on spotify ..." /><!--
+		--><button id="search"><i class="fa fa-search" aria-hidden="true"></i></button>
+	</div>
+	<div id="results">
+		Search results will be displayed here.
+	</div>
+	<div class="h2">Current Selection</div>
+	<div id="current">
+	</div>
+	<button>Finish</button>
+
+</div>
+
+<!--vendor scripts-->
+<script type="text/javascript" src="/vendors/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/vendors/jplayer.min.js"></script>
+
+<!--app scripts-->
+<script type="text/javascript" src="/play-1.js" async></script>
+
+</body>

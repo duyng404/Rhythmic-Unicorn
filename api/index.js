@@ -8,25 +8,42 @@ var ctrl = require('./controllers.js');
 //var ctrlReviews = require('../controllers/reviews.controllers.js');
 
 // song routes
-router
-  .route('/songs')
-  .get(ctrl.songGetOne)
-  .post(ctrl.songAddOne);
+//router
+//  .route('/songs')
+//  .get(ctrl.songGetOne)
+//  .post(ctrl.songAddOne);
+//
+//router
+//  .route('/songs/:spotId')
+//  .get(ctrl.songGetOne);
+//
+router.
+	route('/relation').
+	get(ctrl.getTenRelation).
+	post(ctrl.postRelation);
 
-router
-  .route('/songs/:spotId')
-  .get(ctrl.songGetOne);
+router.
+	route('/relation/:seedId').
+	get(ctrl.getTenRelation);
 
-router
-  .route('/getSeedSong')
-  .get(ctrl.getSeedSong);
+router.
+	route('/getSeed').
+	get(ctrl.getSeedSong);
 
-router
-  .route('/connectSong')
-  .post(ctrl.songConnect)
+router.
+	route('/setSeed/:spotId').
+	get(ctrl.setSeedSong);
 
-router
-  .route('/getSpotify/Token')
-  .get(ctrl.getToken);
+router.
+	route('/getSpotifyToken').
+	get(ctrl.getToken);
+
+router.
+	route('/touch/:spotId').
+	get(ctrl.touch);
+
+router.
+	route('/search/:query').
+	get(ctrl.search);
 
 module.exports = router;

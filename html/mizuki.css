@@ -72,20 +72,20 @@
 
 /* -------------- COOL BACKGROUND -------------- */
 
-#imagefade{
-	width:100%;
-	height: 300px;
-	background:
-		linear-gradient(
-		  rgba(0, 0, 0, 0.6),
-		  rgba(34, 34, 34, 1)
-		),
-		url("images/guitar.jpg");
-	background-repeat: no-repeat;
-	background-size: cover;
-	background-position: center center;
-	margin: 0 0 -270px 0;
-}
+	#imagefade{
+		width:100%;
+		height: 300px;
+		background:
+			linear-gradient(
+			  rgba(0, 0, 0, 0.6),
+			  rgba(34, 34, 34, 1)
+			),
+			url("images/guitar.jpg");
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: center center;
+		margin: 0 0 -270px 0;
+	}
 
 /* ------------- TIMER --------------- */
 
@@ -174,6 +174,7 @@
 
 	#search-bar {
 		width: 90%;
+		max-width: 1000px;
 		margin: 40px auto 0;
 	}
 
@@ -221,15 +222,16 @@
 
 /* ------------- RESULTS ------------- */
 
-	#results{
+	#results,#current{
 		width: 90%;
+		max-width: 1000px;
 		margin: 10px auto;
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 		grid-gap: 10px;
 	}
 
-	.song{
+	.song,.selected{
 		position: relative;
 		height: 300px;
 	}
@@ -272,7 +274,7 @@
 		position: absolute;
 		height: 40px;
 		width: 100%;
-		bottom: 0;
+		bottom: 0; left: 0;
 		box-sizing:border-box;
 		-moz-box-sizing: border-box;
 		-webkit-box-sizing: border-box;
@@ -289,6 +291,21 @@
 		-moz-transition: all 0.2s ease-in-out;
 		-o-transition: all 0.2s ease-in-out;
 		transition: all 0.2s ease-in-out;
+	}
+
+	.select-overlay{
+		position:absolute;
+		height:100%; width:100%;
+		top:0; left:0;
+		background-color: #18777C;
+		display: none;
+		z-index: 20;
+		text-align: center;
+		text-transform: uppercase;
+		font: italic 1.2rem "Exo", Arial, sans-serif;
+		font-weight: 600; font-size:2rem;
+		padding: 4rem 0 0 0;
+		color: #222;
 	}
 
 /* ------------ JPLAYERS -------------- */
@@ -357,102 +374,113 @@
 	}
 
 /* ------------- RESPONSIVE ---------- */
-/* tablet & phone */
-@media (max-width: 900px){
-		html { font-size: 16px; }
-}
+	/* tablet & phone */
+	@media (max-width: 900px){
+			html { font-size: 16px; }
+	}
 
-/* desktop */
-@media (min-width: 900px){
-}
+	/* desktop */
+	@media (min-width: 900px){
+	}
 
-@media (min-width: 900px) and (max-width: 1500px) {
-}
+	@media (min-width: 900px) and (max-width: 1500px) {
+	}
 
-/* wide desktop */
-@media (min-width: 1500px){
-}
+	/* wide desktop */
+	@media (min-width: 1500px){
+	}
 
 /* -------------- FONTS & FORMATTING -------------- */
 
-body{
-	font-family: "Open Sans", "Roboto", Arial, sans-serif;
-}
+	body{
+		font-family: "Open Sans", "Roboto", Arial, sans-serif;
+	}
 
-h1,h2,h3,h4,h5,h6{
-	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
-	color: #00B6CE;
-	font-weight: 600;
-}
+	h1,h2,h3,h4,h5,h6{
+		font: italic 1.2rem "Exo", Arial, sans-serif;
+		font-weight: 600; 
+		color: #00B6CE;
+	}
 
-a{
-	text-decoration: none;
-	color: #00B6CE;
-}
+	.h2{
+		font: italic 1.2rem "Exo", Arial, sans-serif;
+		font-weight: 600; 
+		color: #00B6CE;
+		font-size: 2rem;
+		width: 90%;
+		max-width: 1000px;
+		text-align: center;
+		margin: 4rem auto;
+	}
 
-a:visited{
-	color: #00B6CE;
-}
+	a{
+		text-decoration: none;
+		color: #00B6CE;
+	}
 
-a:hover{
-	color: #99c2ff;
-}
+	a:visited{
+		color: #00B6CE;
+	}
 
-ol{
-	list-style-type: decimal;
-	margin: 1em 0 0;
-	padding: 0 0 0 2.5em;
-}
+	a:hover{
+		color: #99c2ff;
+	}
 
-ul{
-	list-style-type: square;
-	margin: 1em 0 0;
-	padding: 0 0 0 2.5em;
-}
+	ol{
+		list-style-type: decimal;
+		margin: 1em 0 0;
+		padding: 0 0 0 2.5em;
+	}
 
-blockquote {
-	border-left: 1em solid #555;
-	margin: 1em 10px 0;
-	padding: 0.5em 10px;
-	quotes: "\201C""\201D""\2018""\2019";
-}
+	ul{
+		list-style-type: square;
+		margin: 1em 0 0;
+		padding: 0 0 0 2.5em;
+	}
 
-blockquote:before {
-	color: #666;
-	content: open-quote;
-	font-family: Times, serif;
-	font-size: 4.5em;
-	line-height: 0.1em;
-	margin-right: 0.2em;
-	vertical-align: -0.4em;
-}
+	blockquote {
+		border-left: 1em solid #555;
+		margin: 1em 10px 0;
+		padding: 0.5em 10px;
+		quotes: "\201C""\201D""\2018""\2019";
+	}
 
-blockquote p {
-	display: inline;
-}
+	blockquote:before {
+		color: #666;
+		content: open-quote;
+		font-family: Times, serif;
+		font-size: 4.5em;
+		line-height: 0.1em;
+		margin-right: 0.2em;
+		vertical-align: -0.4em;
+	}
 
-pre {
-	width:95%;
-	overflow: auto;
-	font-family: monospace;
-	background-color: #404040;
-	margin: 1em auto 0;
-	padding: .5em 10px;
-}
+	blockquote p {
+		display: inline;
+	}
 
-code{
-	font-family: monospace;
-	background-color: #404040;
-	padding: 0 4px;
-}
+	pre {
+		width:95%;
+		overflow: auto;
+		font-family: monospace;
+		background-color: #404040;
+		margin: 1em auto 0;
+		padding: .5em 10px;
+	}
 
-strong{
-	font-weight: 600;
-}
+	code{
+		font-family: monospace;
+		background-color: #404040;
+		padding: 0 4px;
+	}
 
-em{
-	font-style: italic;
-}
+	strong{
+		font-weight: 600;
+	}
+
+	em{
+		font-style: italic;
+	}
 
 /* -------------- TABLE ----------------- */
 

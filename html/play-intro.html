@@ -12,35 +12,17 @@
 </head>
 <body>
 	<div id="content">
-	<h1>u pressed play button</h1>
-	<p>there will be some instructions here</p>
-	<button id="start" disabled="true">Start</button>
-	<div id="content">
+	<h1>HOW TO PLAY</h1>
+	<p>pls answer seriously</p>
+	<button id="start">Start</button>
+	</div>
 
 	<!--vendor scripts-->
 	<script type="text/javascript" src="/vendors/jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="/vendors/jplayer.min.js"></script>
 
 	<!--app scripts-->
-	<script type="text/javascript" src="/game.js"></script>
-	<script>
-		var gameScreen;
-		$.ajax({
-			url: "/game.html",
-			cache: false,
-			success: function(data){
-				gameScreen = data;
-				$("#start").prop("disabled",false);
-				$("#content").empty();
-				$("#content").html(gameScreen);
-				//addResult(1,"Tokyo Girl","Perfume","Tokyo Girl Single","https://i.scdn.co/image/22405cc1b7eb26e5d7bc80f847939836ba74d89a","/test.mp3");
-			}
-		});
+	<script type="text/javascript" src="/play-intro.js" async></script>
 
-		$("#start").click(function(){
-			$("#content").empty();
-			$("#content").html(gameScreen);
-		});
-	</script>
 </body>
 </html>

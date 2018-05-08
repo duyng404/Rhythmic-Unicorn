@@ -1,6 +1,5 @@
-var spToken = "";
 var ytToken = "AIzaSyBI9Fv5kTKSAymabcCHL0K9dJsTHAzC2hA";
-var ytQ = [];
+var gCount = 1;
 
 // --------------- UI BEHAVIORS -------------------
 
@@ -30,9 +29,13 @@ $("#query").on('keyup', function (e) {
 	}
 });
 
+// when search button is clicked, send a request to spotify
+$('#search').click(performSearch);
+
 // hovering over a song makes the Add button appear
 function assignHover(){
-	$(".song").hover(
+	$(".song, .selected").unbind();
+	$(".song, .selected").hover(
 		function(){
 			var aa = $(".select-button",this);
 			aa.css("opacity","1");
@@ -43,8 +46,9 @@ function assignHover(){
 	)
 }
 
-// click on a song play/pause it
 function assignClick(){
+	// click on a song play/pause it
+	$(".albumcover").unbind();
 	$(".albumcover").click( function(){
 		var aa = $(this).children(".jp-jplayer");
 		if (aa.length == 0) return;
@@ -57,37 +61,61 @@ function assignClick(){
 			aa.addClass("playing");
 		}
 	});
-}
 
+	// click on select button to add
+	$('#results .select-button').unbind();
+	$('#results .select-button').click(function(){
+		var data = $(this).parent().data('songinfo');
+		// unbind everything
+		$('#song-'+data.count+' *').unbind();
+		// fadein overlay
+		$('#song-'+data.count+' .select-overlay').fadeIn(300,function(){
+			console.log('lol');
+		});
+
+		// add to current selection
+		$('#current').append('\
+			<div class="selected" id="selected-'+data.count+'">\
+				<div class="albumcover">\
+					<div class="songtitle">'+data.title+'</div>\
+					<div class="artist">'+data.artist+'</div>\
+					<div class="album">'+data.album+'</div>\
+				</div>\
+				<button class="select-button">remove</button>\
+				<div class="select-overlay">Song Removed</div>\
+			</div>');
+		// modify the background to album cover
+		var ss = "#selected-"+data.count+" > .albumcover";
+		$(ss).css("background-image", $(ss).css("background-image") + ",url('"+data.img+"')");
+		$(ss).css("background-size", "cover");
+		$(ss).css("background-position", "center center");
+		// add data
+		$('#selected-'+data.count).data('songinfo',data);
+		// behaviors
+		assignHover();
+		assignClick();
+	});
+
+	// click on remove button to remove
+	$('#current .select-button').unbind();
+	$('#current .select-button').click(function(){
+		var data = $(this).parent().data('songinfo');
+		// unbind everything
+		$('#selected-'+data.count+' *').unbind();
+		// fadein overlay
+		$('#selected-'+data.count).fadeOut(300,function(){
+			$('#selected-'+data.count).remove();
+		});
+	});
+}
 // ------------------ DATA HANDLING -------------------
 
-// get the spotify token as soon as the script is loaded
-$.get('/api/getSpotifyToken',function(data){
-	spToken = data.token;
-});
-
-// when search button is clicked, send a request to spotify
-$('#search').click(performSearch);
-
 function performSearch(){
-	//var query = encodeURIComponent($('#query').val());
 	var query = $('#query').val();
-	$('#result-spotify').html("Waiting for response ...");
-	$('#result-youtube').html("Waiting for response ...");
+	$('#results').html("Waiting for response ...");
 	$.ajax({
-		url: 'https://api.spotify.com/v1/search',
-		data:{
-			q: query,
-			type: 'track',
-			limit: 15,
-			market: 'US'
-		},
+		url: '/api/search/'+query,
 		type: "GET",
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json',
-			'Authorization': spToken
-		},
 		success: populateResult
 	});
 };
@@ -97,24 +125,25 @@ function populateResult(data){
 	//ytQ = data.tracks.items.slice(0,5);
 	//searchYoutube();
 	$('#results').empty();
-	var count=1;
-	data.tracks.items.forEach(function(i){
-		var title = i.name;
-		var artist = i.artists[0].name;
-		var album = i.album.name;
-		var img = i.album.images[0].url;
-		var sample = i.preview_url;
+	data.forEach(function(i){
+		var title = i.title;
+		var artist = i.artist;
+		var album = i.album;
+		var img = i.img;
+		var preview = i.preview;
+		var spotId= i.spotId;
 		//console.log(i);
-		if (sample === null) sample = "";
-		addResult(count, title, artist, album, img, sample);
-		count++;
+		if (preview === null) preview = "";
+		addResult(gCount, title, artist, album, img, preview, spotId);
+		gCount++;
 	});
 	assignHover();
 	assignClick();
 }
 
 // helper function to add an entry to #results
-function addResult(count, title, artist, album, img, preview){
+function addResult(count, title, artist, album, img, preview, spotId){
+	// all the jplayer shit
 	var jpplayer = "";
 	if (preview != ""){
 		jpplayer = '\
@@ -140,7 +169,11 @@ function addResult(count, title, artist, album, img, preview){
 			<div class="album">'+album+'</div>'+jpplayer+'\
 		</div>\
 		<button class="select-button">add</button>\
+		<div class="select-overlay">Song Added</div>\
 	</div>');
+
+	// add identifying data
+	$('#song-'+count).data('songinfo',{count:count, title:title, artist:artist, album:album, img:img, preview:preview});
 
 	// modify the background to album cover
 	var ss = "#song-"+count+" > .albumcover";
@@ -148,7 +181,7 @@ function addResult(count, title, artist, album, img, preview){
 	$(ss).css("background-size", "cover");
 	$(ss).css("background-position", "center center");
 
-	// link player
+	// link jplayer
 	if (preview !== ""){
 		$("#jplayer-player-"+count).jPlayer( {
 		ready: function () {
@@ -162,6 +195,7 @@ function addResult(count, title, artist, album, img, preview){
 			preload: "none"
 		});
 	} else {
+		// if preview not available, load youtube on click
 		$(ss).click(function(){
 			var query = title + artist;
 			$.ajax({
