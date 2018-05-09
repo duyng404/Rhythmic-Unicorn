@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-require('mongoose-query-random');
 var dburl = 'mongodb://localhost:27017/unicorndb';
 
 // mongoose options

@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-require('mongoose-query-random');
+var random = require('mongoose-simple-random');
 var Schema = mongoose.Schema;
 
 var linkSchema = new mongoose.Schema({
@@ -9,6 +9,7 @@ var linkSchema = new mongoose.Schema({
 	total: { type: Number, default: 0 },
 	ratio: { type: Number, default: 0 }
 });
+linkSchema.plugin(random);
 
 var songSchema = new mongoose.Schema({
 	spotId : {
@@ -30,6 +31,7 @@ var songSchema = new mongoose.Schema({
 	//	ref: 'Link'
 	//} ]
 });
+songSchema.plugin(random);
 
 var Link = mongoose.model('Link',linkSchema);
 var Song = mongoose.model('Song',songSchema);

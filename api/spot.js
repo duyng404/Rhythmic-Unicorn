@@ -6,21 +6,36 @@ module.exports = function(){
 		clientSecret: '1c46d4f5f30146a798777a17372f63fe'
 	}
 
+	var expire = 0;
+
 	this.spotifyApi = new SpotifyWebApi(credentials);
 
 	this.spotifyApi.clientCredentialsGrant().then(
 		function(data){
 			console.log('Spotify connection successful.')
 			spotifyApi.setAccessToken(data.body['access_token']);
+			expire = Date.now() + data.body['expires_in'] * 1000;
 		},
 		function(err){
 			console.log('Something went wrong when retrieving an access token', err);
 		}
 	)
 
-	this.search = function(query){
+	this.checkExpire = async function(){
+		if (Date.now() > expire){
+			await this.spotifyApi.clientCredentialsGrant().then(
+				function(data){
+					console.log('Spotify Token Refreshed');
+					spotifyApi.setAccessToken(data.body['access_token']);
+					expire = Date.now() + data.body['expires_in'] * 1000;
+				});
+		}
+	}
+
+	this.search = async function(query){
+		await this.checkExpire();
 		return new Promise((resolve,reject) => {
-		this.spotifyApi.searchTracks(query,{ limit: 15 }).
+		this.spotifyApi.searchTracks(query,{ limit: 9 }).
 			then(function(data){
 				resolve(data);
 			}, function(err){
@@ -29,7 +44,8 @@ module.exports = function(){
 		})
 	}
 
-	this.getTracks = function(trackIds){
+	this.getTracks = async function(trackIds){
+		await this.checkExpire();
 		return new Promise((resolve,reject) => {
 		this.spotifyApi.getTracks(trackIds).
 			then(function(data){

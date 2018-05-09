@@ -50,29 +50,35 @@ var _checkLink = async function(link){
 	}
 }
 
-var _findRandomLink = function(amount){
-	return new Promise((resolve,reject) => {
-		Link.
-			find().
-			where('total').lte(10).
-			populate('songs').
-			random(amount, true, function(err,found){
-				if (err) reject(err);
-				resolve(found);
-			});
-	});
+var _findRandomLink = function(amount,lt=false){
+	if (lt)
+		return new Promise((resolve,reject) => {
+			Link.
+				findRandom({total: {$lte: 10}}, {}, {limit: amount, populate:'songs'},
+					function(err, found){
+						if (err) reject (err);
+						resolve(found);
+					});
+		});
+	else
+		return new Promise((resolve,reject) => {
+			Link.
+				findRandom({}, {}, {limit: amount, populate:'songs'},
+					function(err, found){
+						if (err) reject (err);
+						resolve(found);
+					});
+		});
 }
 
 var _findRandomLinkWithSeed = function(amount,seedId){
 	return new Promise((resolve,reject) => {
 		Link.
-			find({"spotIds":seedId}).
-			where('total').lte(10).
-			populate('songs').
-			random(amount, true, function(err,found){
-				if (err) reject (err);
-				resolve(found);
-			});
+			findRandom({"spotIds":seedId, total: {$lte: 10}}, {}, {limit: amount, populate:'songs'},
+				function(err, found){
+					if (err) reject (err);
+					resolve(found);
+				});
 	});
 }
 
@@ -95,6 +101,7 @@ var _touch = async function(spotIds,spotifyApi){
 	if (toBeTouched.length > 0){
 		await spotifyApi.getTracks(toBeTouched).
 			then(async function(data){
+				console.log(data);
 				// after query, add them all to db
 				for (const i of data){
 					await _createSong(i.id, i.name, i.artists[0].name, i.album.name, i.album.images[0].url, i.preview_url).
@@ -122,17 +129,17 @@ module.exports.touch = function(req, res){
 
 module.exports.getSeedSong = function(req, res) {
 	Song.
-		find({"seed":true}).
-		random(1, true, function(err, doc) {
-			if (err) {
-				console.log('error:',err);
-				res.status(500).json({"message":"error finding seed song"});
-			} else if (doc) {
-				res.status(200).json(doc);
-			} else {
-				res.status(200).json({});
-			}
-		});
+		findRandom({"seed":true},{},{limit:1},
+			function(err, found){
+				if (err) {
+					console.log('error:',err);
+					res.status(500).json({"message":"error finding seed song"});
+				} else if (found) {
+					res.status(200).json(found[0]);
+				} else {
+					res.status(200).json({});
+				}
+			});
 };
 
 module.exports.setSeedSong = function(req, res){
@@ -180,12 +187,22 @@ module.exports.postRelation = async function(req,res) {
 								then(async function(created){
 									// also update both the songs
 									//await _checkLink(created);
+									created = created.toObject();
+									created.reward = 5;
 									resultList.push(created);
 								}).catch(function(err){console.log('error creating link',err)});
 						} else {
 						// if link already exist
 							//await _checkLink(found[0]);
-							resultList.push(found[0]);
+							found = found[0];
+							if (arel.rating == 'up') found.up += 1;
+							found.total += 1;
+							found.ratio = Math.floor(found.up / found.total * 100);
+							found.save();
+							found = found.toObject();
+							if (found.total <= 10) found.reward = 5;
+							else found.reward = 1;
+							resultList.push(found);
 						}
 					}). catch(function(err){ console.log('error finding link:',err) });
 			}
@@ -210,7 +227,13 @@ module.exports.getTenRelation = async function(req,res){
 				}
 			}).catch(function(err){console.log('error findling link:',err)});
 	} else {
-		await _findRandomLink(10).
+		await _findRandomLink(5,true).
+			then(function(found){
+				for (const i of found){
+					result.push(i);
+				}
+			}).catch(function(err){console.log('error findling link:',err)});
+		await _findRandomLink(5,false).
 			then(function(found){
 				for (const i of found){
 					result.push(i);

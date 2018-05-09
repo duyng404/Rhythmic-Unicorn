@@ -1,5 +1,20 @@
+const questions = [
+"How many songs can you name that is similar to ...",
+"What other songs remind you of ...",
+"What songs would you put in the same playlist with ...",
+"What songs sound just like ...",
+"How may songs have the same genre with ...",
+"What other artists wrote songs like ...",
+"What songs convey the same meaning as ...",
+"What other songs made you feel like ...",
+"What genre of songs does ... belong to ?",
+"What are in the same ballpark with ..."
+]
 var ytToken = "AIzaSyBI9Fv5kTKSAymabcCHL0K9dJsTHAzC2hA";
+var seedId = "";
 var gCount = 1;
+var timeLeft = 300;
+var timeElapsed = 0;
 
 // --------------- UI BEHAVIORS -------------------
 
@@ -32,10 +47,8 @@ $("#query").on('keyup', function (e) {
 // when search button is clicked, send a request to spotify
 $('#search').click(performSearch);
 
-// hovering over a song makes the Add button appear
-function assignHover(){
-	$(".song, .selected").unbind();
-	$(".song, .selected").hover(
+function assignBehaviorForResults(path){
+	$(path).hover(
 		function(){
 			var aa = $(".select-button",this);
 			aa.css("opacity","1");
@@ -43,13 +56,10 @@ function assignHover(){
 			var aa = $(".select-button",this);
 			aa.css("opacity",".1");
 		}
-	)
-}
+	);
 
-function assignClick(){
 	// click on a song play/pause it
-	$(".albumcover").unbind();
-	$(".albumcover").click( function(){
+	$(path+" .albumcover").click( function(){
 		var aa = $(this).children(".jp-jplayer");
 		if (aa.length == 0) return;
 		if (aa.hasClass("playing")){
@@ -63,15 +73,15 @@ function assignClick(){
 	});
 
 	// click on select button to add
-	$('#results .select-button').unbind();
-	$('#results .select-button').click(function(){
+	$(path+' .select-button').click(function(){
+		$.jPlayer.pause();
 		var data = $(this).parent().data('songinfo');
 		// unbind everything
-		$('#song-'+data.count+' *').unbind();
+		$(path+' *').unbind();
 		// fadein overlay
-		$('#song-'+data.count+' .select-overlay').fadeIn(300,function(){
-			console.log('lol');
-		});
+		$(path+' .select-overlay').fadeIn(300);
+
+		$('.hideAtFirst').removeClass('hideAtFirst');
 
 		// add to current selection
 		$('#current').append('\
@@ -92,23 +102,146 @@ function assignClick(){
 		// add data
 		$('#selected-'+data.count).data('songinfo',data);
 		// behaviors
-		assignHover();
-		assignClick();
+		assignBehaviorForSelected('#selected-'+data.count);
 	});
+}
+
+function assignBehaviorForSelected(path){
+	$(path).hover(
+		function(){
+			var aa = $(".select-button",this);
+			aa.css("opacity","1");
+		}, function(){
+			var aa = $(".select-button",this);
+			aa.css("opacity",".1");
+		}
+	);
 
 	// click on remove button to remove
-	$('#current .select-button').unbind();
-	$('#current .select-button').click(function(){
+	$(path+' .select-button').click(function(){
 		var data = $(this).parent().data('songinfo');
 		// unbind everything
-		$('#selected-'+data.count+' *').unbind();
+		$(path+' *').unbind();
 		// fadein overlay
-		$('#selected-'+data.count).fadeOut(300,function(){
-			$('#selected-'+data.count).remove();
+		$(path).fadeOut(300,function(){
+			$(path).remove();
 		});
 	});
 }
-// ------------------ DATA HANDLING -------------------
+
+$('#finish').click(gameOver);
+
+// ------------------ ON LOAD -------------------
+
+window.onload = function(){
+	// get a seed song
+	$.ajax({
+		url: '/api/getSeed',
+		type: "GET",
+		success: function(data){
+			seedId = data.spotId;
+			$('#question-title').html(data.title);
+			$('#question-artist').html('by '+data.artist);
+			var query = data.title + ' ' + data.artist;
+			$.ajax({
+				url: 'https://www.googleapis.com/youtube/v3/search',
+				data:{
+					part: 'snippet',
+					maxResults: 1,
+					q: query,
+					type: 'video',
+					key: ytToken
+				},
+				type: "GET",
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				success: function(data){
+					console.log(data);
+					var id = data.items[0].id.videoId;
+					$("#question-video .aspect-ratio").append('<iframe type="text/html" src="https://www.youtube.com/embed/'+id+'" frameborder="0"></iframe>');
+				}
+			});
+			window.setInterval(gameLoop,1000);
+		}
+	});
+}
+
+// ----------------- GAME LOOP ------------------------
+
+function gameLoop(){
+	if (timeElapsed == 0){
+		$('#question-text').animate({opacity:1},400);
+	}
+	if (timeElapsed == 1){
+		$('#spotlight').animate({opacity:1},400);
+		$('#question-play').animate({opacity:1},400);
+	}
+	if (timeElapsed == 2){
+		$('#search-bar').animate({opacity:1},400);
+		$('#results').animate({opacity:1},100);
+		window.setInterval(changeQuestion,7000);
+	}
+	if (timeElapsed == 3){
+		$('#timer').animate({opacity:1},300);	
+	}
+	if (timeLeft == 0){
+		gameOver();
+	}
+	
+	var min = Math.floor(timeLeft/60);
+	var sec = ("0" + timeLeft % 60).slice(-2);
+	$('#minLeft').html(min);
+	$('#secLeft').html(sec);
+	
+	if (timeElapsed > 3){
+		timeLeft -= 1;	
+	}
+	timeElapsed += 1;
+}
+
+function changeQuestion(){
+	var rand = Math.floor(Math.random() * questions.length);
+	$('#question-text').animate({opacity:0},100,function(){
+		$('#question-text').html(questions[rand]);
+		$('#question-text').animate({opacity:1},100);
+	});
+}
+
+function gameOver(){
+	if ( $.trim( $('#current').html() ).length ){
+		var listOfId = [];
+		$('#current').children('.selected').each(function(){
+			var data = $(this).data('songinfo');
+			listOfId.push( {"spotId":data.spotId,"rating":"up"} );
+		});
+		$.ajax({
+				url: '/api/relation',
+				data:{
+					seedSongId: seedId,
+					relatedSongs: JSON.stringify(listOfId)
+				},
+				type: "POST",
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+				success: function(data){
+					localStorage.setItem('survey-result',JSON.stringify(data));
+					var next = localStorage.getItem('next');
+					localStorage.setItem('next','play-result.html');
+					localStorage.setItem('seedId',seedId);
+					window.location.href = "/"+next;
+				},
+				error: function(jqxhr, err, ex){
+					console.log(err);
+					console.log(ex);
+				}
+			});
+	}
+}
+
+// ----------------- DATA HANDLING --------------------
 
 function performSearch(){
 	var query = $('#query').val();
@@ -137,8 +270,6 @@ function populateResult(data){
 		addResult(gCount, title, artist, album, img, preview, spotId);
 		gCount++;
 	});
-	assignHover();
-	assignClick();
 }
 
 // helper function to add an entry to #results
@@ -173,7 +304,7 @@ function addResult(count, title, artist, album, img, preview, spotId){
 	</div>');
 
 	// add identifying data
-	$('#song-'+count).data('songinfo',{count:count, title:title, artist:artist, album:album, img:img, preview:preview});
+	$('#song-'+count).data('songinfo',{count:count, title:title, artist:artist, album:album, img:img, preview:preview, spotId: spotId});
 
 	// modify the background to album cover
 	var ss = "#song-"+count+" > .albumcover";
@@ -197,7 +328,7 @@ function addResult(count, title, artist, album, img, preview, spotId){
 	} else {
 		// if preview not available, load youtube on click
 		$(ss).click(function(){
-			var query = title + artist;
+			var query = title + ' ' + artist;
 			$.ajax({
 				url: 'https://www.googleapis.com/youtube/v3/search',
 				data:{
@@ -220,4 +351,5 @@ function addResult(count, title, artist, album, img, preview, spotId){
 			//$(ss).append()
 		});
 	}
+	assignBehaviorForResults("#song-"+count);
 }

@@ -91,6 +91,7 @@
 
 	#timer {
 		text-align: center;
+		opacity: 0;
 	}
 
 	#timer p{
@@ -119,12 +120,14 @@
 		font: 1.2rem "Open Sans", Arial, sans-serif;
 		font-weight: 400;
 		color: #ccc;
+		opacity: 0;
 	}
 
 	#spotlight {
 		display:inline-block;
 		line-height: 0;
 		margin: 20px 0 20px;
+		opacity: 0;
 	}
 
 	#question-play {
@@ -133,6 +136,7 @@
 		display: inline-block;
 		margin: 0 0 0 20px;
 		cursor: pointer;
+		opacity: 0;
 	}
 
 	#question-title{
@@ -176,6 +180,7 @@
 		width: 90%;
 		max-width: 1000px;
 		margin: 40px auto 0;
+		opacity: 0;
 	}
 
 	#query {
@@ -306,6 +311,80 @@
 		font-weight: 600; font-size:2rem;
 		padding: 4rem 0 0 0;
 		color: #222;
+	}
+
+/*--------------- QUIZ ----------------*/
+
+	#quiz{
+		width: 80%;
+		max-width: 600px;
+		margin: 10px auto;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+		grid-gap: 50px;
+	}
+
+	#quiz-song1, #quiz-song2{
+		position: relative;
+		height: 300px;
+	}
+
+	#quiz-buttons{
+		text-align:center;
+	}
+
+	.quiz-choice{
+		line-height: 3rem;
+		text-transform: uppercase;
+		font: italic 1.5rem "Exo", Arial, sans-serif;
+		font-weight: 600; font-size:1.5rem;
+		box-sizing:border-box;
+		padding: 0 2rem;
+		margin: 2rem auto;
+		background-color: #00b6ce;
+		border:3px solid #00b6ce;
+		color: #fff;
+		cursor: pointer;
+		display: inline-block;
+	}
+
+	.quiz-choice:hover{
+		color:#00b6be;
+		background-color:#fff;
+		border:3px solid #fff;
+	}
+
+/* ------------- NEXT BUTTON ----------- */
+
+	#finish{
+		line-height: 3rem;
+		text-transform: uppercase;
+		font: italic 1.5rem "Exo", Arial, sans-serif;
+		font-weight: 600; font-size:1.5rem;
+		box-sizing:border-box;
+		padding: 0 2rem;
+		margin: 2rem auto;
+		background-color: #00b6ce;
+		border:3px solid #00b6ce;
+		color: #fff;
+		cursor: pointer;
+		display: block;
+	}
+
+	#finish:hover{
+		color:#00b6be;
+		background-color:#fff;
+		border:3px solid #fff;
+	}
+
+/* ------------- FOOTER ------------- */
+
+	#footer{
+		width: 100%;
+		height: 100px;
+		/*border-top: 5px #18777C solid;
+		background-color: #1A2526;*/
+		margin: 5rem 0 0 0;
 	}
 
 /* ------------ JPLAYERS -------------- */
@@ -502,3 +581,7 @@ th{
 td{
 	padding: 0 2em 0 .5em;
 }
+
+/*---------------- UTILITY ----------------*/
+
+.hideAtFirst { display: none !important; }

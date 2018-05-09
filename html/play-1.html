@@ -21,20 +21,20 @@
 	<!-- COUNTDOWN TIMER -->
 	<div id="timer">
 		<p>Time Left</p>
-		<h2>5:00</h2>
+		<h2><span id="minLeft">5</span>:<span id="secLeft">00</span></h2>
 	</div>
 
 	<!-- QUESTION SONG -->
 	<div id="question">
 		<div id="question-text">How many songs can you name that is similar to ...</div>
 		<div id="spotlight">
-			<div id="question-title">Jesus of Suburbia</div><br />
-			<div id="question-artist">by Green Day</div>
+			<div id="question-title">...</div><br />
+			<div id="question-artist">...</div>
 		</div>
 		<div id="question-play"><i class="fa fa-play-circle" aria-hidden="true"></i></div>
 	</div>
 	<div id="question-video">
-		<div class="aspect-ratio"><iframe type="text/html" src="https://www.youtube.com/embed/Ee_uujKuJMI" frameborder="0"></iframe></div>
+		<div class="aspect-ratio"></div>
 	</div>
 
 	<!-- SEARCH BAR -->
@@ -43,14 +43,15 @@
 		--><button id="search"><i class="fa fa-search" aria-hidden="true"></i></button>
 	</div>
 	<div id="results">
-		Search results will be displayed here.
 	</div>
-	<div class="h2">Current Selection</div>
-	<div id="current">
+	<div class="h2 hideAtFirst">Current Selection</div>
+	<div id="current" class="hideAtFirst">
 	</div>
-	<button>Finish</button>
+	<button id="finish" class="hideAtFirst">Next</button>
 
 </div>
+
+<div id="footer"></div>
 
 <!--vendor scripts-->
 <script type="text/javascript" src="/vendors/jquery-3.3.1.min.js"></script>
