@@ -23,6 +23,7 @@ window.onload = function() {
 		localStorage.setItem('balance',parseInt(localStorage.getItem('balance'))+total);
 		localStorage.setItem('finished','true');
 	}
+	displayFooter();
 }
 
 $('#finish').click(function(){
@@ -89,4 +90,21 @@ function displayQuizResult(data){
 
 function displayTotal(total){
 	$('#total').html('Total Reward: '+total+' Contribution Tokens');
+}
+
+function displayFooter(){
+	var balance = parseInt(localStorage.getItem('balance'));
+	var current = localStorage.getItem('current');
+	$('#footer').empty();
+	$('#footer').append('<p>Current Tokens: '+balance+'</p>');
+	if (current == 'play-1.html'){
+		$('#footer').append('<p>Current Mode: Exploration Mode (1 out of 2)</p>');
+		$('#footer').append('<p>Hint: Using Google or other music database is encouraged</p>');
+		$('#footer').append('<p><a href="/">Exit to homepage</a></p>');
+	}
+	if (current == 'play-2.html'){
+		$('#footer').append('<p>Current Mode: Confirmation Mode (2 out of 2)</p>');
+		$('#footer').append('<p>Questions left: '+quizList.length+'</p>');
+		$('#footer').append('<p><a href="/">Exit to homepage</a></p>');
+	}
 }
