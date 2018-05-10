@@ -134,6 +134,15 @@ $('#finish').click(gameOver);
 // ------------------ ON LOAD -------------------
 
 window.onload = function(){
+	// make sure in the right place
+	var current = localStorage.getItem('current');
+	var next = localStorage.getItem('next');
+	var finished = localStorage.getItem('finished');
+	if (finished == 'true') window.location.href = "/play-result.html";
+	if (current === null) window.location.href = "/";
+	else if (current != 'play-1.html' || next != 'play-2.html'){
+		window.location.href = "/"+current;
+	}
 	// get a seed song
 	$.ajax({
 		url: '/api/getSeed',
@@ -166,12 +175,14 @@ window.onload = function(){
 			window.setInterval(gameLoop,1000);
 		}
 	});
+	displayFooter();
 }
 
 // ----------------- GAME LOOP ------------------------
 
 function gameLoop(){
 	if (timeElapsed == 0){
+		$('#loading').remove();
 		$('#question-text').animate({opacity:1},400);
 	}
 	if (timeElapsed == 1){
@@ -186,7 +197,7 @@ function gameLoop(){
 	if (timeElapsed == 3){
 		$('#timer').animate({opacity:1},300);	
 	}
-	if (timeLeft == 0){
+	if (timeLeft <= 0){
 		gameOver();
 	}
 	
@@ -229,6 +240,7 @@ function gameOver(){
 				success: function(data){
 					localStorage.setItem('survey-result',JSON.stringify(data));
 					var next = localStorage.getItem('next');
+					localStorage.setItem('current','play-2.html');
 					localStorage.setItem('next','play-result.html');
 					localStorage.setItem('seedId',seedId);
 					window.location.href = "/"+next;
@@ -242,6 +254,23 @@ function gameOver(){
 }
 
 // ----------------- DATA HANDLING --------------------
+
+function displayFooter(){
+	var balance = parseInt(localStorage.getItem('balance'));
+	var current = localStorage.getItem('current');
+	$('#footer').empty();
+	$('#footer').append('<p>Current Tokens: '+balance+'</p>');
+	if (current == 'play-1.html'){
+		$('#footer').append('<p>Current Stage: 1 out of 2</p>');
+		$('#footer').append('<p>Hint: Using Google or other music database is encouraged</p>');
+		$('#footer').append('<p><a href="/">Exit to homepage</a></p>');
+	}
+	if (current == 'play-2.html'){
+		$('#footer').append('<p>Current Stage: 2 out of 2</p>');
+		$('#footer').append('<p>Questions left: '+quizList.length+'</p>');
+		$('#footer').append('<p><a href="/">Exit to homepage</a></p>');
+	}
+}
 
 function performSearch(){
 	var query = $('#query').val();
@@ -300,7 +329,7 @@ function addResult(count, title, artist, album, img, preview, spotId){
 			<div class="album">'+album+'</div>'+jpplayer+'\
 		</div>\
 		<button class="select-button">add</button>\
-		<div class="select-overlay">Song Added</div>\
+		<div class="select-overlay">Song Added<br /><i class="fa fa-arrow-down" aria-hidden="true"></i></div>\
 	</div>');
 
 	// add identifying data

@@ -6,6 +6,15 @@ var result = [];
 var song1, song2;
 
 window.onload = function(){
+	// make sure in the right place
+	var current = localStorage.getItem('current');
+	var next = localStorage.getItem('next');
+	var finished = localStorage.getItem('finished');
+	if (finished == 'true') window.location.href = "/play-result.html";
+	if (current === null) window.location.href = "/";
+	else if (current != 'play-2.html' || next != 'play-result.html'){
+		window.location.href = "/"+current;
+	}
 	seedId = localStorage.getItem('seedId');
 	// get relations
 	$.ajax({
@@ -26,6 +35,7 @@ function nextQuiz(){
 		song2 = question.songs[1];
 		displaySong(song1,"#quiz-song1");
 		displaySong(song2,"#quiz-song2");
+		displayFooter();
 	} else {
 		gameOver();
 	}
@@ -55,6 +65,7 @@ async function gameOver(){
 	localStorage.setItem('quiz-result',JSON.stringify(result));
 	var next = localStorage.getItem('next');
 	localStorage.removeItem('next');
+	localStorage.setItem('current','play-result.html');
 	window.location.href = "/"+next;
 }
 
@@ -79,6 +90,23 @@ function sendOneRelation(rel){
 			}
 		});
 	});
+}
+
+function displayFooter(){
+	var balance = parseInt(localStorage.getItem('balance'));
+	var current = localStorage.getItem('current');
+	$('#footer').empty();
+	$('#footer').append('<p>Current Tokens: '+balance+'</p>');
+	if (current == 'play-1.html'){
+		$('#footer').append('<p>Current Stage: 1 out of 2</p>');
+		$('#footer').append('<p>Hint: Using Google or other music database is encouraged</p>');
+		$('#footer').append('<p><a href="/">Exit to homepage</a></p>');
+	}
+	if (current == 'play-2.html'){
+		$('#footer').append('<p>Current Stage: 2 out of 2</p>');
+		$('#footer').append('<p>Questions left: '+quizList.length+'</p>');
+		$('#footer').append('<p><a href="/">Exit to homepage</a></p>');
+	}
 }
 
 // helper function to display song

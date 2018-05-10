@@ -2,14 +2,73 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>Rhythmic Unicorn</title>
+	<link rel="stylesheet" href="/mizuki.css" type="text/css" />
+	<link rel="stylesheet" href="/vendors/fontawesome/css/font-awesome.min.css" type="text/css" />
+	<!--<link type="text/css" rel="stylesheet" href="/audioplayer/css/jplayer.blue.monday.css" rel="stylesheet" />-->
+	<link href="https://fonts.googleapis.com/css?family=Exo:700i|Open+Sans:400,600i&amp;subset=latin-ext" rel="stylesheet">
+
 	<base href="/">
 </head>
+
 <body>
-	<h1>Welcome to Rhythmic Unicorn!!!1</h1>
-	<p><a href="/play-intro.html">PLAY GAME</a></p>
-	<p><a href="/">info</a></p>
-	<p><a href="/">leaderboard</a></p>
+
+<!-- <div id="spotlight"> -->
+<div id="landing">
+	<div id="landing-inner">
+		<h1>Rhythmic Unicorn</h1>
+		<h2>Play games, get music suggestions!</h2>
+		<a class="landing-action-button" href="javascript:void(0);" onclick="play()">Play Now</a>
+		<a class="landing-normal-button" href="javascript:void(0);" onclick="scrollToInfo()">More Info</a>
+		<a class="landing-normal-button" href="javascript:void(0);" onclick="scrollToExtra()">Extra</a>
+	</div>
+</div>
+
+<a id="infoo"></a>
+<div class="h2">What is this about?</div>
+<div id="info">
+	<p><span class='highlight'>Rhythmic Unicorn</span> is a crowdsourcing project that looks to build a music suggestion database through gamification. We, the team (Duy Nguyen &amp; David Schabelski) wanted to experiment with an idea: an application that is built like a game, has the elements of a game and can used to create valuable output. When people play the game, they help building a database of related songs. This database can then be used by online music services like Google Play Music, Youtube Music or Spotify to help make better suggestions.</p>
+	<p>In the game, you will be given a random song, and then challenged to list out other songs that is related to it, as many as possible. The songs can be similar in genre, musical style, or simply the feelings, or &quot;vibe&quot;, you have listening to it.</p>
+	<p>The more you answer, the more <span class='highlight'>Contribution Tokens</span> you gain. You can then spend these Tokens to request contribution for a specific song or to browse through the database itself.</p>
+	<p>The project is still a WIP, with a lot more stuff is coming in the future. Including a <span class='highlight'>research paper</span>, <span class='highlight'>database statistics</span>, and tons of <span class='highlight'>updates</span> and <span class='highlight'>features!</span></p>
+	<p><span class='highlight'>Rhythmic Unicorn</span> is built on Node.js, Expressjs and MongoDB. We also made use of Spotify API and Youtube API for its music database and for previewing songs.</p>
+</div>
+
+<a id="extraa"></a>
+<div class="h2">Extra</div>
+<div id="extra">
+	<p>Play the game to get more <span class='highlight'>Contribution Tokens</span>. Spend the Tokens here to unlock features!</p>
+	<p id="balance">You currently have:</p>
+	<p><span style="color:yellow">These features are currently in development and will be available soon!</span></p>
+
+	<button>Request a song</button>
+	<div class="item-desc">
+		<span class='highlight'>Cost: 700 Tokens.</span><br />
+		Request contributions for a song. The song will then appear in other player's game as the question!
+		</div>
+
+	<button>View a song</button>
+	<div class="item-desc">
+		<span class='highlight'>Cost: 100 Tokens.</span><br />
+		View one specific song in the database, and its top related songs.
+	</div>
+
+	<button>Unlock practice mode</button>
+	<div class="item-desc">
+		<span class='highlight'>Cost: 500 Tokens.</span><br />
+		Wants to play only Exploration Mode or only Confirmation Mode again and again non-stop? Unlock practice mode to do so! Farm those Tokens!
+	</div>
+</div>
+
+<div id="footer"></div>
+
+<!--vendor scripts-->
+<script type="text/javascript" src="/vendors/jquery-3.3.1.min.js"></script>
+
+<!--app scripts-->
+<script type="text/javascript" src="/indexx.js" async></script>
+
 </body>
 </html>
 

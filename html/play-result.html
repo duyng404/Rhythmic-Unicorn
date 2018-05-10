@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>Rhythmic Unicorn</title>
 	<link rel="stylesheet" href="/mizuki.css" type="text/css" />
 	<link rel="stylesheet" href="/vendors/fontawesome/css/font-awesome.min.css" type="text/css" />
@@ -19,15 +20,12 @@
 	<div id="imagefade"></div>
 
 	<!-- QUIZ -->
-	<div class="h2">Are these two songs related ?</div>
-	<div id="quiz">
-		<div id="quiz-song1"></div>
-		<div id="quiz-song2"></div>
-	</div>
-	<div id="quiz-buttons">
-		<button class="quiz-choice" id="quiz-yes">Yes</button>
-		<button class="quiz-choice" id="quiz-no">No</button>
-	</div>
+	<div class="h2">Exploration Mode Results</div>
+	<div id="result-survey"></div>
+	<div class="h2">Confirmation Mode Results</div>
+	<div id="result-quiz"></div>
+	<div id="total" class="h2"></div>
+	<button id="finish">return to homepage</button>
 
 </div>
 
@@ -38,6 +36,6 @@
 <script type="text/javascript" src="/vendors/jplayer.min.js"></script>
 
 <!--app scripts-->
-<script type="text/javascript" src="/play-2.js" async></script>
+<script type="text/javascript" src="/play-result.js" async></script>
 
 </body>
