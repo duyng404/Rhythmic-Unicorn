@@ -19,13 +19,16 @@
 	<!-- HELLA COOL BACKGROUND -->
 	<div id="imagefade"></div>
 
-	<!-- QUIZ -->
-	<div class="h2">Survey Mode Results</div>
-	<div id="result-survey"></div>
-	<div class="h2">Quiz Mode Results</div>
-	<div id="result-quiz"></div>
-	<div id="total" class="h2"></div>
-	<button id="finish">return to homepage</button>
+	<div class="h2">Request A Song</div>
+	<div id="info">Search for a song to put it as a "Question Song". It will then appears as a question in other player's games. Ask everyone for music recommendations! (requires 700 Tokens)</div>
+
+	<!-- SEARCH BAR -->
+	<div id="search-bar">
+		<input id="query" type="text" placeholder="Search on spotify ..." /><!--
+		--><button id="search"><i class="fa fa-search" aria-hidden="true"></i></button>
+	</div>
+	<div id="results">
+	</div>
 
 </div>
 
@@ -36,6 +39,6 @@
 <script type="text/javascript" src="/vendors/jplayer.min.js"></script>
 
 <!--app scripts-->
-<script type="text/javascript" src="/play-result.js" async></script>
+<script type="text/javascript" src="/request.js" async></script>
 
 </body>

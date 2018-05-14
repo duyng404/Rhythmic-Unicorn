@@ -23,10 +23,6 @@ router.
 	post(ctrl.postRelation);
 
 router.
-	route('/relation/:seedId').
-	get(ctrl.getTenRelation);
-
-router.
 	route('/getSeed').
 	get(ctrl.getSeedSong);
 
@@ -45,5 +41,9 @@ router.
 router.
 	route('/search/:query').
 	get(ctrl.search);
+
+router.
+	route('/view/:spotId').
+	get(ctrl.view);
 
 module.exports = router;

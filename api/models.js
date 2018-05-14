@@ -22,6 +22,7 @@ var songSchema = new mongoose.Schema({
 	album : String,
 	img : String,
 	preview : String,
+	total : { type: Number, default: 0 },
 	seed : {
 		type: Boolean,
 		default: false

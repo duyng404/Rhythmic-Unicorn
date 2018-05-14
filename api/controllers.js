@@ -39,47 +39,41 @@ var _checkLink = async function(link){
 	var song0 = link.songs[0];
 	var song1 = link.songs[1];
 	if (!song0.related.includes(link)) {
-		console.log('ADDING LINK TO',song0.title);
 		song0.related.push(link);
 		await song0.save();
 	}
 	if (!song1.related.includes(link)) {
-		console.log('ADDING LINK TO',song1.title);
 		song1.related.push(link);
 		await song1.save();
 	}
 }
 
-var _findRandomLink = function(amount,lt=false){
-	if (lt)
-		return new Promise((resolve,reject) => {
-			Link.
-				findRandom({total: {$lte: 10}}, {}, {limit: amount, populate:'songs'},
-					function(err, found){
-						if (err) reject (err);
-						resolve(found);
-					});
-		});
-	else
-		return new Promise((resolve,reject) => {
-			Link.
-				findRandom({}, {}, {limit: amount, populate:'songs'},
-					function(err, found){
-						if (err) reject (err);
-						resolve(found);
-					});
-		});
+var _chooseRandom = function(array,amount){
+	if (array.length <= amount){
+		return array;
+	} else {
+		ratio = amount / array.length;
+		var coinflip = Math.random();
+		if (coinflip < ratio){
+			return array.slice(0,1).concat(_chooseRandom(array.slice(1),amount-1));
+		} else {
+			return _chooseRandom(array.slice(1),amount);
+		}
+	}
 }
 
-var _findRandomLinkWithSeed = function(amount,seedId){
-	return new Promise((resolve,reject) => {
-		Link.
-			findRandom({"spotIds":seedId, total: {$lte: 10}}, {}, {limit: amount, populate:'songs'},
-				function(err, found){
-					if (err) reject (err);
-					resolve(found);
-				});
-	});
+var _findRandomLinks = function(amount){
+	return new Promise((resolve, reject) => {
+		var max = amount * 5;
+		Link.count().then(async function(count){
+			if (count <= 20) resolve([]);
+			else if (Math.floor(count / 2) < max) max = Math.floor(count/2);
+			await Link.find().sort({'total':1}).limit(max).populate('songs').then(function(found){
+				var a = _chooseRandom(found,amount);
+				resolve(a);
+			}).catch(function(err){console.log('error finding links:',err)})
+		}).catch(function(err){console.log('error counting:',err)});
+	})
 }
 
 var _touch = async function(spotIds,spotifyApi){
@@ -101,7 +95,6 @@ var _touch = async function(spotIds,spotifyApi){
 	if (toBeTouched.length > 0){
 		await spotifyApi.getTracks(toBeTouched).
 			then(async function(data){
-				console.log(data);
 				// after query, add them all to db
 				for (const i of data){
 					await _createSong(i.id, i.name, i.artists[0].name, i.album.name, i.album.images[0].url, i.preview_url).
@@ -127,19 +120,20 @@ module.exports.touch = function(req, res){
 		});
 }
 
-module.exports.getSeedSong = function(req, res) {
-	Song.
-		findRandom({"seed":true},{},{limit:1},
-			function(err, found){
-				if (err) {
-					console.log('error:',err);
-					res.status(500).json({"message":"error finding seed song"});
-				} else if (found) {
-					res.status(200).json(found[0]);
-				} else {
-					res.status(200).json({});
-				}
-			});
+module.exports.getSeedSong = async function(req, res) {
+	var aa = {};
+	await Song.count().then(async function(count){
+		var random = Math.floor(Math.random() * Math.floor(count/4));
+		await Song.
+			find({'seed':true}).
+			sort({'total':1}).
+			skip(random).
+			limit(1).
+			then(function(found){
+				aa = found[0];
+			}).catch(function(err){console.log('error finding:',err)});
+	}).catch(function(err){console.log('error counting:',err)});
+	res.status(200).json(aa);
 };
 
 module.exports.setSeedSong = function(req, res){
@@ -185,8 +179,13 @@ module.exports.postRelation = async function(req,res) {
 							if (arel.rating == 'up') up=1;
 							await _createLink([seedId, arel.spotId], [touched[0],asong], up, 1, Math.floor(up*100)).
 								then(async function(created){
-									// also update both the songs
-									//await _checkLink(created);
+									// increase total of seed song
+									touched[0].total = touched[0].total + 1;
+									await touched[0].save();
+									// increase total of nonseed song
+									asong.total = asong.total + 1;
+									await asong.save();
+									// return
 									created = created.toObject();
 									created.reward = 5;
 									resultList.push(created);
@@ -212,34 +211,12 @@ module.exports.postRelation = async function(req,res) {
 
 module.exports.getTenRelation = async function(req,res){
 	var result = [];
-	if (req.params.seedId) {
-		var seedId = req.params.seedId;
-		await _findRandomLinkWithSeed(3,seedId).
-			then(function(found){
-				for (const i of found){
-					result.push(i);
-				}
-			}).catch(function(err){console.log('error finding link:',err)});
-		await _findRandomLink(7).
-			then(function(found){
-				for (const i of found){
-					result.push(i);
-				}
-			}).catch(function(err){console.log('error findling link:',err)});
-	} else {
-		await _findRandomLink(5,true).
-			then(function(found){
-				for (const i of found){
-					result.push(i);
-				}
-			}).catch(function(err){console.log('error findling link:',err)});
-		await _findRandomLink(5,false).
-			then(function(found){
-				for (const i of found){
-					result.push(i);
-				}
-			}).catch(function(err){console.log('error findling link:',err)});
-	}
+	await _findRandomLinks(10).
+		then(function(found){
+			for (const i of found){
+				result.push(i);
+			}
+		}).catch(function(err){console.log('error findling link:',err)});
 	res.status(200).json(result);
 }
 
@@ -264,6 +241,21 @@ module.exports.search = function(req,res){
 		}).catch(function(err){
 			console.log('error finding songs:',err)
 		})
+}
+
+module.exports.view = async function(req,res){
+	var spotId = req.params.spotId;
+	const spotifyApi = req.app.locals.spotify;
+	var aa = {};
+	await _touch([spotId],spotifyApi).
+		then(async function(touched){
+			touched = touched[0].toObject();
+			await Link.find({'spotIds':touched.spotId}).sort({'total':-1}).limit(15).populate('songs').then(function(found){
+				touched.relations = found;
+				aa = touched;
+			}).catch(function(err){console.log('error finding:',err)});
+		}).catch(function(err){console.log('error touching:',err)});
+	res.status(200).json(aa);
 }
 
 module.exports.getToken = function(req,res){

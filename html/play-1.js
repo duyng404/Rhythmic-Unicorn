@@ -13,7 +13,7 @@ const questions = [
 var ytToken = "AIzaSyBI9Fv5kTKSAymabcCHL0K9dJsTHAzC2hA";
 var seedId = "";
 var gCount = 1;
-var timeLeft = 300;
+var timeLeft = 7;
 var timeElapsed = 0;
 
 // --------------- UI BEHAVIORS -------------------
@@ -167,7 +167,6 @@ window.onload = function(){
 					'Content-Type': 'application/json',
 				},
 				success: function(data){
-					console.log(data);
 					var id = data.items[0].id.videoId;
 					$("#question-video .aspect-ratio").append('<iframe type="text/html" src="https://www.youtube.com/embed/'+id+'" frameborder="0"></iframe>');
 				}
@@ -198,8 +197,10 @@ function gameLoop(){
 		$('#timer').animate({opacity:1},300);	
 	}
 	if (timeLeft <= 0){
+		console.log('BRO');
 		gameOver();
 	}
+	console.log(timeLeft);
 	
 	var min = Math.floor(timeLeft/60);
 	var sec = ("0" + timeLeft % 60).slice(-2);
@@ -250,6 +251,13 @@ function gameOver(){
 					console.log(ex);
 				}
 			});
+	} else {
+		localStorage.setItem('survey-result','[]');
+		var next = localStorage.getItem('next');
+		localStorage.setItem('current','play-2.html');
+		localStorage.setItem('next','play-result.html');
+		localStorage.setItem('seedId',seedId);
+		window.location.href = "/"+next;
 	}
 }
 
@@ -261,7 +269,7 @@ function displayFooter(){
 	$('#footer').empty();
 	$('#footer').append('<p>Current Tokens: '+balance+'</p>');
 	if (current == 'play-1.html'){
-		$('#footer').append('<p>Current Mode: Exploration Mode (1 out of 2)</p>');
+		$('#footer').append('<p>Current Mode: Survey Mode (1 out of 2)</p>');
 		$('#footer').append('<p>Hint: Using Google or other music database is encouraged</p>');
 		$('#footer').append('<p><a href="/">Exit to homepage</a></p>');
 	}

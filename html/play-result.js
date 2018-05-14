@@ -31,6 +31,9 @@ $('#finish').click(function(){
 })
 
 function displaySurveyResult(data){
+	if (data.length == 0){
+		$('#result-survey').append('<p>You didn&quot;t contribute any songs!</p>');
+	}
 	// You listed 8 songs in the survey, 5 of which are new relations!
 	// Here is the summary:
 	// <seed song> is related to:
@@ -46,12 +49,13 @@ function displaySurveyResult(data){
 	$('#result-survey').append('<ul></ul>');
 	for (const i of data){
 		var songName = i.songs[1].title + ' by ' + i.songs[1].artist;
-		var ratio = i.ratio;
+		var ratio = '<span class="songName">'+i.ratio+'%</span> Related.';
+		if (i.total < 10) ratio = '<span class="songName">Newly Added Relation!</span>';
 		var reward = i.reward;
 		if (reward == 5) newRelations+=1;
 		totalReward += reward;
 		$('#result-survey ul').append('<li><span class="songName">'+songName+'</span><br />'
-			+'<span class="songName">'+ratio+'%</span> Related. <span class="songName">+'+reward+'</span> Contribution Token(s)</li>');
+			+ratio+' <span class="songName">+'+reward+'</span> Contribution Token(s)</li>');
 	}
 	$('#result-survey').prepend('<p>You listed <span class="songName">'+totalRelations+'</span> songs in the survey, '
 		+'<span class="songName">'+newRelations+'</span> of which are new relations!</p>'
@@ -70,14 +74,15 @@ function displayQuizResult(data){
 	for (const i of data){
 		var songName1 = i.songs[0].title + ' by ' + i.songs[0].artist;
 		var songName2 = i.songs[1].title + ' by ' + i.songs[1].artist;
-		var ratio = i.ratio;
+		var ratio = '<span class="songName">'+i.ratio+'%</span> Related.';
+		if (i.total < 10) ratio = '<span class="songName">Newly Added Relation!</span>';
 		var reward = i.reward;
 		if (reward == 5) newRelations+=1;
 		totalReward += reward;
 		$('#result-quiz ul').append('<li>\
 			<p><span class="songName">' + songName1 + '</span> is related to <br/>\
 			<span class="songName">'+songName2+'</span><br />'
-			+'<span class="songName">'+ratio+'%</span> Related. <span class="songName">+'+reward+'</span> Contribution Token(s)\
+			+ratio+' <span class="songName">+'+reward+'</span> Contribution Token(s)\
 			</li>');
 	}
 	$('#result-quiz').prepend('<p>You rated <span class="songName">'+totalRelations+'</span> relations in total, '

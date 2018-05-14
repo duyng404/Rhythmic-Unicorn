@@ -1,94 +1,60 @@
+var gCount = 1;
 var ytToken = "AIzaSyBI9Fv5kTKSAymabcCHL0K9dJsTHAzC2hA";
-var seedId = "";
-var quizList = [];
-var answer = [];
-var result = [];
-var song1, song2;
 
 window.onload = function(){
-	// make sure in the right place
-	var current = localStorage.getItem('current');
-	var next = localStorage.getItem('next');
-	var finished = localStorage.getItem('finished');
-	if (finished == 'true') window.location.href = "/play-result.html";
-	if (current === null) window.location.href = "/";
-	else if (current != 'play-2.html' || next != 'play-result.html'){
-		window.location.href = "/"+current;
-	}
-	seedId = localStorage.getItem('seedId');
-	// get relations
+	theSong = JSON.parse(localStorage.getItem('viewSong'));
+	$('#search-bar').animate({opacity:1},400);
+	$('#spotlight').animate({opacity:1},400);
+	$('#question-play').animate({opacity:1},400);
+
+	var query = theSong.title + ' ' + theSong.artist;
 	$.ajax({
-		url: '/api/relation',
+		url: 'https://www.googleapis.com/youtube/v3/search',
+		data:{
+			part: 'snippet',
+			maxResults: 1,
+			q: query,
+			type: 'video',
+			key: ytToken
+		},
 		type: "GET",
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json',
+		},
 		success: function(data){
-			quizList = data;
-			nextQuiz();
+			var id = data.items[0].id.videoId;
+			$("#question-video .aspect-ratio").append('<iframe type="text/html" src="https://www.youtube.com/embed/'+id+'" frameborder="0"></iframe>');
 		}
 	});
+
+	$('#question-title').html(theSong.title);
+	$('#question-artist').html('by '+theSong.artist);
+
+	displayRelated(theSong.relations);
+
+	displayFooter();
 }
 
-function nextQuiz(){
-	if (quizList.length > 0){
-		var question = quizList.shift();
-		song1 = question.songs[0];
-		song2 = question.songs[1];
-		displaySong(song1,"#quiz-song1");
-		displaySong(song2,"#quiz-song2");
-		displayFooter();
-	} else {
-		gameOver();
+$('#finish').click(function(){
+	window.location.href = "/";
+})
+
+function displayRelated(array){
+	for (const i of array){
+		var ss = '#rel-'+gCount;
+		var ss1 = ss+'-song1';
+		var ss2 = ss+'-song2';
+		$('#view').append('<div id="'+ss.substring(1)+'" class="view-relation"></div>');
+		$(ss).append('<div id="'+ss1.substring(1)+'" class="view-relation-song1"></div>');
+		displaySong(i.songs[0],ss1);
+		$(ss).append('<div id="'+ss2.substring(1)+'" class="view-relation-song1"></div>');
+		displaySong(i.songs[1],ss2);
+		var ratio = '<span class="songName">'+i.ratio+'%</span> Related.';
+		if (i.total < 10) ratio = '<span class="songName">New Relation.</span>';
+		$('#view').append('<p>'+ratio+'</p>');
+		gCount+=1;
 	}
-}
-
-$("#quiz-yes").click(function(){
-	var tmp = [];
-	tmp.push({"spotId":song2.spotId,"rating":"up"});
-	answer.push({"seedSongId":song1.spotId, "relatedSongs":JSON.stringify(tmp)});
-	nextQuiz();
-});
-
-$("#quiz-no").click(function(){
-	var tmp = [];
-	tmp.push({"spotId":song2.spotId,"rating":"down"});
-	answer.push({seedSongId:song1.spotId, relatedSongs:JSON.stringify(tmp)});
-	nextQuiz();
-});
-
-async function gameOver(){
-	for (const i of answer){
-		await sendOneRelation(i).
-			then(function(data){
-				result.push(data[0]);
-			});
-	}
-	localStorage.setItem('quiz-result',JSON.stringify(result));
-	var next = localStorage.getItem('next');
-	localStorage.removeItem('next');
-	localStorage.setItem('current','play-result.html');
-	window.location.href = "/"+next;
-}
-
-function sendOneRelation(rel){
-	return new Promise((resolve,reject) => {
-		$.ajax({
-			url: '/api/relation',
-			data:rel,
-			type: "POST",
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded',
-			},
-			success: function(data){
-				resolve(data);
-				// localStorage.setItem('quiz-answer',JSON.stringify(data));
-				// var next = localStorage.getItem('next');
-				// localStorage.removeItem('next');
-				// window.location.href = "/"+next;
-			},
-			error: function(jqxhr, err, ex){
-				reject(err+' '+ex);
-			}
-		});
-	});
 }
 
 function displayFooter(){
@@ -102,13 +68,32 @@ function displayFooter(){
 		$('#footer').append('<p><a href="/">Exit to homepage</a></p>');
 	}
 	if (current == 'play-2.html'){
-		$('#footer').append('<p>Current Mode: Quiz Mode (2 out of 2)</p>');
+		$('#footer').append('<p>Current Mode: Confirmation Mode (2 out of 2)</p>');
 		$('#footer').append('<p>Questions left: '+quizList.length+'</p>');
 		$('#footer').append('<p><a href="/">Exit to homepage</a></p>');
 	}
 }
 
-// helper function to display song
+// collapsible question song
+$("#question-title,#question-artist,#question-play").hover(
+	function(){
+		$("#question-title").css("color","#00d8f4");
+		$("#question-artist").css("color","#00d8f4");
+		$("#question-play").css("color","#00d8f4");
+	}, function(){
+		$("#question-title").css("color","#00b6ce");
+		$("#question-artist").css("color","#00b6ce");
+		$("#question-play").css("color","#666");
+	})
+	.click(function(){
+		if ($("#question-video").css("display") == "none")
+			$("#question-video").css("display","block");
+		else
+			$("#question-video").css("display","none");
+	}
+);
+
+	// helper function to display song
 function displaySong(song, element){
 	// all the jplayer shit
 	var jpplayer = "";

@@ -195,26 +195,30 @@
 		text-align: left;
 	}
 
-	#extra button{
+	#extra a{
+		display: inline-block;
 		line-height: 3rem;
+		box-sizing: border-box;
 		text-transform: uppercase;
+		background-color: #18777C;
+		border:3px solid #18777C;
+		color: white;
+		text-decoration: none;
 		font-family: "Exo", Arial, sans-serif;
 		font-style: italic;
 		font-weight: 600; font-size:1.2rem;
-		box-sizing:border-box;
-		padding: 0 2rem;
 		margin: 0 auto .5rem;
-		background-color: #18777C;
-		border:3px solid #18777C;
-		color: #fff;
+		padding: 0 2rem;
 		cursor: pointer;
-		display: block;
 	}
 
-	#extra button:hover{
+	#extra a:hover{
 		color:#00b6be;
 		background-color:#fff;
+		border:3px solid #fff;
 	}
+
+
 
 	#extra .item-desc{
 		margin: 0 0 2rem;
@@ -307,6 +311,7 @@
 
 	#question-video{
 		width: 90%;
+		max-width: 640px;
 		margin: 0 auto;
 		display: none;
 	}
@@ -539,6 +544,35 @@
 
 	#result-quiz li{
 		margin: .5em 0;
+	}
+
+/*--------------- VIEW SONG ----------------*/
+
+	#view{
+		width:100%;
+	}
+
+	.view-relation{
+		width: 80%;
+		max-width: 600px;
+		margin: 10px auto;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+		grid-gap: 20px;
+	}
+
+	.view-relation-song1, .view-relation.song2{
+		position: relative;
+		height: 300px;
+	}
+
+	#view p{
+		width: 80%;
+		max-width: 600px;
+		text-align: center;
+		margin: -30px auto 40px;
+		font: italic 1.5rem "Exo", Arial, sans-serif;
+		font-weight: 600; font-size:1.5rem;
 	}
 
 /* ------------- NEXT BUTTON ----------- */
