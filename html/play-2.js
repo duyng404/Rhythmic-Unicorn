@@ -112,7 +112,7 @@ function displayFooter(){
 function displaySong(song, element){
 	// all the jplayer shit
 	var jpplayer = "";
-	if (song.preview !== ""){
+	if (song.preview !== "" && song.preview != null){
 		jpplayer = '\
 			<div id="jplayer-player-'+song.spotId+'" class="jp-jplayer"></div>\
 			<div id="jplayer-wrapper-'+song.spotId+'" class="jp-audio player" role="application" aria-label="media player">\
@@ -146,7 +146,7 @@ function displaySong(song, element){
 	$(ss).css("background-position", "center center");
 
 	// link jplayer
-	if (song.preview !== ""){
+	if (song.preview !== "" && song.preview != null){
 		$("#jplayer-player-"+song.spotId).jPlayer( {
 		ready: function () {
 		  $(this).jPlayer("setMedia", {
@@ -192,7 +192,7 @@ function displaySong(song, element){
 				},
 				success: function(data){
 					var id = data.items[0].id.videoId;
-					$(ss).append('<iframe type="text/html" src="https://www.youtube.com/embed/'+id+'?autoplay=1&controls=0&fs=0&modestbranding=1&rel=0&showinfo=1&disablekb=1&start=30" frameborder="0"></iframe>');
+					$(ss).append('<iframe type="text/html" src="https://www.youtube.com/embed/'+id+'?autoplay=1&controls=1&fs=0&modestbranding=1&rel=0&showinfo=1&disablekb=1&start=30" frameborder="0"></iframe>');
 				}
 			});
 			//$(ss).append()
