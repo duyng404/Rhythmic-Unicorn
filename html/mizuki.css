@@ -606,7 +606,7 @@
 		border-top: 5px #18777C solid;
 		background-color: #1A2526;
 		margin: 5rem 0 0 0;
-		color: #444;
+		color: #aaa;
 		padding: 2rem;
 	}
 
@@ -616,11 +616,11 @@
 	}
 
 	#footer a{
-		color: #18777C;
+		color: #00B6CE;
 	}
 
 	#footer a:visited{
-		color: #18777C;
+		color: #00B6CE;
 	}	
 
 /* ------------ JPLAYERS -------------- */

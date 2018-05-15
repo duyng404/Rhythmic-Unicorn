@@ -13,7 +13,7 @@ const questions = [
 var ytToken = "AIzaSyBI9Fv5kTKSAymabcCHL0K9dJsTHAzC2hA";
 var seedId = "";
 var gCount = 1;
-var timeLeft = 7;
+var timeLeft = 300;
 var timeElapsed = 0;
 
 // --------------- UI BEHAVIORS -------------------
@@ -75,6 +75,7 @@ function assignBehaviorForResults(path){
 	// click on select button to add
 	$(path+' .select-button').click(function(){
 		$.jPlayer.pause();
+		$(path+' iframe').remove();
 		var data = $(this).parent().data('songinfo');
 		// unbind everything
 		$(path+' *').unbind();
@@ -270,7 +271,8 @@ function displayFooter(){
 	$('#footer').append('<p>Current Tokens: '+balance+'</p>');
 	if (current == 'play-1.html'){
 		$('#footer').append('<p>Current Mode: Survey Mode (1 out of 2)</p>');
-		$('#footer').append('<p>Hint: Using Google or other music database is encouraged</p>');
+		$('#footer').append('<p><span style="color:yellow">Hint:</span> Using Google or other music database is encouraged</p>');
+		$('#footer').append('<p><span style="color:yellow">Hint:</span> Refresh page to get a new song</p>');
 		$('#footer').append('<p><a href="/">Exit to homepage</a></p>');
 	}
 	if (current == 'play-2.html'){
@@ -382,7 +384,7 @@ function addResult(count, title, artist, album, img, preview, spotId){
 				},
 				success: function(data){
 					var id = data.items[0].id.videoId;
-					$(ss).append('<iframe type="text/html" src="https://www.youtube.com/embed/'+id+'?autoplay=1&controls=0&fs=0&modestbranding=1&rel=0&showinfo=1&disablekb=1&start=30" frameborder="0"></iframe>');
+					$(ss).append('<iframe type="text/html" src="https://www.youtube.com/embed/'+id+'?autoplay=1&controls=1&fs=0&modestbranding=1&rel=0&showinfo=1&disablekb=1&start=30" frameborder="0"></iframe>');
 				}
 			});
 			//$(ss).append()
