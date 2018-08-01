@@ -1,5 +1,4 @@
-Rhythmic Unicorn
-===============
+# Rhythmic Unicorn
 
 Building a music suggestion database through gamified crowdsourcing.
 
