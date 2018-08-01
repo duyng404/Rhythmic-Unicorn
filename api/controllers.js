@@ -122,8 +122,8 @@ module.exports.touch = function(req, res){
 
 module.exports.getSeedSong = async function(req, res) {
 	var aa = {};
-	await Song.count().then(async function(count){
-		var random = Math.floor(Math.random() * Math.floor(count/4));
+	await Song.count({'seed':true}).then(async function(count){
+		var random = Math.floor(Math.random() * Math.floor(count));
 		await Song.
 			find({'seed':true}).
 			sort({'total':1}).
@@ -251,11 +251,50 @@ module.exports.view = async function(req,res){
 		then(async function(touched){
 			touched = touched[0].toObject();
 			await Link.find({'spotIds':touched.spotId}).sort({'total':-1}).limit(15).populate('songs').then(function(found){
+				found.sort(function(a,b){
+					return parseInt(b.ratio) - parseInt(a.ratio);
+				});
 				touched.relations = found;
 				aa = touched;
 			}).catch(function(err){console.log('error finding:',err)});
 		}).catch(function(err){console.log('error touching:',err)});
 	res.status(200).json(aa);
+}
+
+module.exports.stats = async function(req,res){
+	var totalSong = 0;
+	var totalSeed = 0;
+	var totalRel = 0;
+	var relPerSeed = 0;
+	var votesPerRel = 0;
+
+	await Song.find().then(async function(found){
+		for (const i of found){
+			totalSong += 1;
+			if (i.seed){
+				totalSeed += 1;
+				relPerSeed += parseInt(i.total);
+			}
+		}
+	}).catch(function(err){console.log('error finding:',err)});
+
+	await Link.find().then(async function(found){
+		for (const i of found){
+			totalRel += 1;
+			votesPerRel += parseInt(i.total);
+		}
+	}).catch(function(err){console.log('error finding:',err)});
+
+	relPerSeed = Math.floor(relPerSeed / totalSeed);
+	votesPerRel = Math.floor(votesPerRel / totalRel);
+
+	res.status(200).json({
+		totalSong: totalSong,
+		totalSeed: totalSeed,
+		totalRel: totalRel,
+		relPerSeed: relPerSeed,
+		votesPerRel: votesPerRel
+	})
 }
 
 module.exports.getToken = function(req,res){
@@ -288,5 +327,6 @@ module.exports.getToken = function(req,res){
 		res.status(200).json({'token':'Bearer '+token});
 	}
 }
+
 
 

@@ -46,4 +46,8 @@ router.
 	route('/view/:spotId').
 	get(ctrl.view);
 
+router.
+	route('/stats').
+	get(ctrl.stats);
+
 module.exports = router;
